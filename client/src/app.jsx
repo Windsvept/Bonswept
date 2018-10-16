@@ -27,6 +27,7 @@ class Windswept extends React.Component {
   }
 
   setUser(user) {
+    console.log(user);
     this.setState({
       player: user,
     }, () => {
@@ -37,7 +38,7 @@ class Windswept extends React.Component {
   render () {
     return (
       <div>
-        <h1>Windswept</h1>
+        <h1>Somni' Vindicta</h1>
         { this.state.login ? 
           <Login setUser={this.setUser} /> : null
         }

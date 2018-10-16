@@ -6,7 +6,7 @@ export default class Trees extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      
+      portalFrame: 0,
     }
   }
 
@@ -17,11 +17,11 @@ export default class Trees extends React.Component {
     let forest = 0;
     let posneg;
     
-    var drawTree = ( startX, startY, length, angle, depth, branchWidth, color1, color2) => {
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext('2d');
-      var rand = Math.random;
-      var newLength, newAngle, newDepth, maxBranch = 3,
+    let drawTree = ( startX, startY, length, angle, depth, branchWidth, color1, color2) => {
+      let canvas = document.getElementById('canvas');
+      let ctx = canvas.getContext('2d');
+      let rand = Math.random;
+      let newLength, newAngle, newDepth, maxBranch = 3,
           endX, endY, maxAngle = 2 * Math.PI / 6, subBranches;
 
       ctx.beginPath();
@@ -47,7 +47,7 @@ export default class Trees extends React.Component {
       subBranches = (rand() * (maxBranch - 1)) + 1;
       branchWidth *= 0.7;
 
-      for (var i = 0; i < subBranches; i++) {
+      for (let i = 0; i < subBranches; i++) {
         newAngle = angle + rand() * maxAngle - maxAngle * 0.5;
         newLength = length * (0.7 + rand() * 0.3);
         drawTree(endX, endY, newLength, newAngle, newDepth, branchWidth, color1, color2);
@@ -89,12 +89,36 @@ export default class Trees extends React.Component {
       drawTree( move, 200, len, -Math.PI / 2, 10, branchW, c1, c2);
       forest++;
     }, 1000);
+
+    let portal = document.getElementById('portal').getContext('2d');
+    let portalImage = new Image();
+    portalImage.src = './img/portal.png';
+    setInterval(() => {
+      portal.clearRect(0, 0, 200, 200);
+      portal.beginPath();
+      portal.drawImage(portalImage, this.state.portalFrame * 200, 0, 200, 200, 0, 0, 200, 200);
+      portal.fill();
+      this.setState({
+        portalFrame: this.state.portalFrame + 1
+      });
+      if (this.state.portalFrame >= 5) {
+        this.setState({
+          portalFrame: 0
+        });
+      }
+    }, 1000/5);
   }
 
   render () {
     return (
       <div>
         <canvas id="canvas" className={styles.trees} width="1600" height="200"></canvas>
+        <div className={styles.sign}><img height="102px" src="./img/sign.png"></img></div>
+        <div className={styles.portal}><canvas id="portal" width="200" height="200"></canvas></div>
+        {this.props.gameState >= 4  ? 
+        <div id="shop" className={styles.shop} height="200px"><img height="200px" src="./img/store2.png"></img></div>:
+        <div id="shop" className={styles.shop} height="200px"><img height="200px" src="./img/store.png"></img></div>
+        }
       </div>
     )
   }

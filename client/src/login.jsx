@@ -7,12 +7,14 @@ export default class Login extends React.Component {
     this.state = { 
       username: '',
       password: '',
+      class: 'wizard',
       userexists: true,
     };
     this.login = this.login.bind(this);
     this.createUser = this.createUser.bind(this);
     this.setUser = this.setUser.bind(this);
     this.setPass = this.setPass.bind(this);
+    this.setClass = this.setClass.bind(this);
     this.loginOrCreate = this.loginOrCreate.bind(this);
   }
 
@@ -22,8 +24,8 @@ export default class Login extends React.Component {
 
   login() {
     let user = {};
-    user.username = (this.state.username);
-    user.password = (this.state.password);
+    user.username = this.state.username;
+    user.password = this.state.password;
     $.get('/login', user, (player) => {
       console.log('Login successful!');
       this.props.setUser(player);
@@ -35,8 +37,9 @@ export default class Login extends React.Component {
 
   createUser() {
     let user = {};
-    user.username = (this.state.username);
-    user.password = (this.state.password);
+    user.username = this.state.username;
+    user.password = this.state.password;
+    user.class = this.state.class
     $.post('/createUser', user, (data) => {
       console.log('Create New User successful!')
     }, 'json');
@@ -51,7 +54,7 @@ export default class Login extends React.Component {
   setUser(e) {
     let user = e.target.value;
     this.setState({
-      username: user
+      username: user,
     });
   }
 
@@ -59,6 +62,13 @@ export default class Login extends React.Component {
     let pass = e.target.value;
     this.setState({
       password: pass
+    });
+  }
+
+  setClass(e) {
+    let clas = e.target.value;
+    this.setState({
+      class: clas
     });
   }
 
@@ -81,7 +91,13 @@ export default class Login extends React.Component {
               <label>New Username</label>
               <input type="text" onChange={this.setUser}></input>
               <label>New password</label>
-              <input type="text" onChange={this.setPass}></input>          
+              <input type="text" onChange={this.setPass}></input>   
+              <label>Class</label>
+              <select id="classList" onChange={this.setClass}>
+                <option value="wizard">Wizard</option>
+                <option value="rogue">Rogue</option>
+                <option value="knight">Knight</option>
+              </select>
             </form>
             <button onClick={this.createUser}>Create New User</button>
             <button onClick={this.loginOrCreate}>Back to Login</button>

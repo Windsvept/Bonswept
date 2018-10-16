@@ -5,7 +5,7 @@
   position: relative;
 }
 
-.players {
+.canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -19,6 +19,7 @@
   left: 0;
   width: 1600px;
   height: 200px;
+  background-color: #99CCFF;
 }
 
 .ground {
@@ -27,4 +28,45 @@
   left: 0;
   width: 1600px;
   height: 500px;
+}
+
+.shop {
+  position: absolute;
+  display:flex;
+  width: 1200px;
+  justify-content: center;
+}
+
+.groundCont {
+  display: flex;
+  position: relative;
+  width: 1600px;
+  height: 500px;
+}
+
+.spawn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -60px;
+  margin-left: -100px;
+  width: 200px;
+  height: 120px;
+}
+
+.portal {
+  position: absolute;
+  display: flex;
+  width: 420px;
+  height: 200px;
+  justify-content: center;
+}
+
+.sign {
+  position: absolute;
+  display: flex;
+  width: 120px;
+  height: 200px;
+  justify-content: center;
+  align-items: flex-end;
 }

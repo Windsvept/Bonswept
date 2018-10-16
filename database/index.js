@@ -14,6 +14,7 @@ client.connect();
 //     id SERIAL, 
 //     username TEXT,
 //     password TEXT,
+//     class TEXT,
 //     equip JSON,
 //     inv JSON,
 //     PRIMARY KEY (id, username)
@@ -29,6 +30,17 @@ client.connect();
 //     effect1 TEXT,
 //     effect2 TEXT,
 //     PRIMARY KEY (itemid, itemname)
+//   )`
+// )
+// client.query(
+//   `CREATE TABLE monsters(
+//     monsterid SERIAL,
+//     monstername TEXT,
+//     power INT,
+//     protect INT, 
+//     speed INT, 
+//     health INT,
+//     PRIMARY KEY (monsterid, monstername)
 //   )`
 // );
 
@@ -46,7 +58,17 @@ let getUserData = (user, cb) => {
 }
 
 let addNewUser = (user, cb) => {
-  client.query(`INSERT INTO users (username, password, equip, inv) VALUES ('${user.username}', '${user.password}', '{}', '[]');`, (err, res) => {
+  client.query(`INSERT INTO users (username, password, class, equip, inv) VALUES ('${user.username}', '${user.password}', '${user.class}','{}', '[]');`, (err, res) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, res);
+    }
+  });
+}
+
+let getMonsterData = (level, cb) => {
+  client.query(`SELECT * FROM monsters WHERE monsterid BETWEEN 1 AND ${level};`, (err, res) => {
     if (err) {
       cb(err, null);
     } else {
@@ -57,6 +79,7 @@ let addNewUser = (user, cb) => {
 
 exports.getUserData = getUserData;
 exports.addNewUser = addNewUser;
+exports.getMonsterData = getMonsterData;
 
 // let getReviews = (productId, cb) => {
 //   client.query(`SELECT * FROM products INNER JOIN reviews ON reviews.productId = products.id WHERE id=${productId}`, (err, res) => {

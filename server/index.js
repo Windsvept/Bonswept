@@ -23,6 +23,16 @@ app.get('/login', (req, res)=> {
   });
 });
 
+app.get('/monsters', (req, res) => {
+  let level = req.query;
+  db.getMonsterData(level.level, (err, data) => {
+    if (err) { console.log('error getting Monsters!', err) }
+    else {
+      res.send(data.rows);
+    }
+  });
+});
+
 app.post('/createUser', (req, res) => {
   let user = req.body
   db.addNewUser(user, (err, data) => {
@@ -34,12 +44,22 @@ app.post('/createUser', (req, res) => {
 });
 
 let players = {};
-io.on('connection', function (socket) {
 
-  socket.on('player joined', () => {
+io.on('connection', (socket) => {
+  socket.on('disconnect', () => {
+    delete players[socket.id]
+  });
+
+  socket.on('player joined', (player) => {
     players[socket.id] = {
-      x: 300,
-      y: 500
+      username: player.username,
+      class: player.class,
+      direction: 'right',
+      attacking: false,
+      cooldown: 0,
+      x: 783,
+      y: 320,
+      health: 1000,
     }
     console.log(players);
   });
@@ -48,12 +68,14 @@ io.on('connection', function (socket) {
     let player = players[socket.id] || {};
     if (data.left) {
       player.x -= 5;
+      player.direction = 'left';
     }
     if (data.up) {
       player.y -= 5;
     }
     if (data.right) {
       player.x += 5;
+      player.direction = 'right';
     }
     if (data.down) {
       player.y += 5;
@@ -72,9 +94,16 @@ io.on('connection', function (socket) {
     }
   });
 
-  setInterval(function() {
+
+  socket.on('basic-attack', (data) => {
+    let player = players[socket.id] || {};
+    player.attacking = data.basic;
+    player.attackD = player.direction;
+  });
+
+  setInterval(() => {
     io.sockets.emit('state', players);
-  }, 1000 / 60);
+  }, 1000 / 100);
 });
 
 
